@@ -1,0 +1,27 @@
+{
+  "name": "@gedeagas/lynx-template",
+  "version": "3.2.0",
+  "description": "The template used by `npx @gedeagas/lynx-cli init` to bootstrap a Lynx Native application.",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "type": "commonjs",
+  "files": [
+    "template/*",
+    "template.config.js"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "semver": "^7.6.3"
+  },
+  "homepage": "https://github.com/gedeagas/lynx-template/tree/main",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gedeagas/lynx-template.git"
+  }
+}
