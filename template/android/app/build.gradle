@@ -6,6 +6,14 @@ def appcompat_version = "1.7.0"
 def lynx_version = "3.2.0-rc.1"
 def fresco_version = "2.3.0"
 
+
+project.ext.lynxConfig = [
+    buildCommand: 'build',  // or your specific build command
+    sourceDir: rootProject.projectDir.parent,  // adjust if your source directory is different
+    bundlePath: 'dist/main.lynx.bundle',  // adjust to your bundle path
+    assetsPath: 'app/src/main/assets'  // adjust if your assets path is different
+]
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -86,4 +94,19 @@ dependencies {
     implementation("androidx.appcompat:appcompat:$appcompat_version")
 
  
+}
+// Apply the Lynx Gradle script (assumes lynx.gradle is in the root project directory)
+apply from: "${rootProject.projectDir}/lynx.gradle"
+
+// Call configureLynxBuild to create the buildLynxApp task
+configureLynxBuild(project, lynxConfig)
+
+// Ensure that the custom task is attached to preBuild
+afterEvaluate {
+    def preReleaseBuildTask = tasks.findByName("preReleaseBuild")
+    if (preReleaseBuildTask != null) {
+        preReleaseBuildTask.dependsOn tasks.findByName("buildLynxApp")
+    } else {
+        println "Warning: preReleaseBuild task not found in project ${project.name}"
+    }
 }
