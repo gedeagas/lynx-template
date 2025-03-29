@@ -65,11 +65,17 @@ class MainActivity : Activity() {
 
         // Configure view builder based on debug or release mode
         if (BuildConfig.DEBUG) {
+            val sharedPref = getPreferences(MODE_PRIVATE)
+            val isFastRefreshEnabled = sharedPref.getBoolean("fastRefreshEnabled", true)
+
             // In debug mode, enable generic and template resource fetchers
+
             viewBuilder.apply {
                 setEnableGenericResourceFetcher(LynxBooleanOption.TRUE)
-                setGenericResourceFetcher(GenericResourceFetcher())
                 setTemplateResourceFetcher(AppResourceFetcher())
+                if (isFastRefreshEnabled) {
+                    setGenericResourceFetcher(GenericResourceFetcher())
+                }
             }
         } else {
             // In release mode, set template provider

@@ -3,7 +3,7 @@ apply plugin: "org.jetbrains.kotlin.android"
 
 def enableProguardInReleaseBuilds = false
 def appcompat_version = "1.7.0"
-def lynx_version = "3.2.0-rc.0"
+def lynx_version = "3.2.0-rc.1"
 def fresco_version = "2.3.0"
 
 android {

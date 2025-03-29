@@ -37,21 +37,49 @@ class DevMenuHandler(private val activity: Activity) {
     private fun showLynxDevMenu() {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle("Lynx Dev Menu")
-            .setItems(arrayOf("Reload", "Change Bundle Location", "Enable Fast Refresh", "Settings")) { _, which ->
-                when (which) {
-                    0 -> {
-                        (activity as? MainActivity)?.reloadLynxView()
-                    }
-                    1 -> {
-                        showChangeBundleLocationDialog()
-                    }
-                    2 -> {
-                        val intent = Intent(activity, SwitchActivity::class.java)
-                        activity.startActivity(intent)
-                    }
+
+        val sharedPref = activity.getPreferences(MODE_PRIVATE)
+        val isFastRefreshEnabled = sharedPref.getBoolean("fastRefreshEnabled", true)
+        val fastRefreshText = if (isFastRefreshEnabled) "Disable Fast Refresh" else "Enable Fast Refresh"
+
+        builder.setItems(arrayOf("Reload", "Change Bundle Location", fastRefreshText, "Settings")) { _, which ->
+            when (which) {
+                0 -> {
+                    (activity as? MainActivity)?.reloadLynxView()
+                }
+                1 -> {
+                    showChangeBundleLocationDialog()
+                }
+                2 -> {
+                    toggleFastRefresh()
+                }
+                3 -> {
+                    val intent = Intent(activity, SwitchActivity::class.java)
+                    activity.startActivity(intent)
                 }
             }
+        }
         builder.show()
+    }
+
+    /**
+     * Toggles the fast refresh setting.
+     */
+    private fun toggleFastRefresh() {
+        val sharedPref = activity.getPreferences(MODE_PRIVATE)
+        val isFastRefreshEnabled = sharedPref.getBoolean("fastRefreshEnabled", true)
+        val newFastRefreshState = !isFastRefreshEnabled
+
+        sharedPref.edit().putBoolean("fastRefreshEnabled", newFastRefreshState).apply()
+
+        val message = if (newFastRefreshState) "Fast Refresh Enabled" else "Fast Refresh Disabled"
+        AlertDialog.Builder(activity)
+            .setMessage(message)
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .show()
+
+        // Recreate the activity to apply the changes
+        activity.recreate()
     }
 
     /**
